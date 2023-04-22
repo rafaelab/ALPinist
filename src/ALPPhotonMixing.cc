@@ -105,27 +105,18 @@ void ALPPhotonMixing::process(Candidate* candidate) const {
 	double oscillationLength = 2. / mixing.deltaOscillation;
 
 
-	evolve(candidate, mixing, initialState, step);
-
-
-	/* Allow oscillation and adjust step lengths  accordingly. */
-	// Random& random = Random::instance();
-	// if (limit > 0. && limit <= 1.) {
-	// 	double distance = step;
-	// 	do {
-	// 		double randDistance = random.randUniform(0., distance);
-	// 		if (oscillationLength < randDistance) {
-	// 			candidate->limitNextStep(oscillationLength * limit);
-	// 			return;
-	// 		} else {
-	// 			evolve(candidate, mixing, initialState, randDistance);
-	// 		}
-	// 		distance -= randDistance;
-	// 	} while (distance > 0);
-	// } else {
-	// 	evolve(candidate, mixing, initialState, step);
-	// }
-
+	// allow oscillation and adjust step lengths  accordingly
+	// this is important when the module is called with other interaction modules (e.g., pair production)
+	if (limit > 0.) {
+		if (step > oscillationLength * limit) {
+			evolve(candidate, mixing, initialState, step);	
+			candidate->limitNextStep(oscillationLength * limit);
+		} else {
+			evolve(candidate, mixing, initialState, step);	
+		}
+	} else {
+		evolve(candidate, mixing, initialState, step);
+	}
 }
 
 void ALPPhotonMixing::evolve(Candidate* candidate, MixingParameters& mixing, const WaveFunction3c& initialState, const double& distance) const {
