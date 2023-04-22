@@ -141,15 +141,12 @@ void ALPPhotonMixing::evolve(Candidate* candidate, MixingParameters& mixing, con
 	WaveFunction3c finalState(finalStateVector);
 	finalState.normalise();
 
-
-
+	// estimate oscillation probability
 	double probPA = std::norm(std::conj(initialState[0]) * finalState[2] + std::conj(initialState[1]) * finalState[2]); 
 	double probAP = std::norm(std::conj(initialState[2]) * finalState[0] + std::conj(initialState[2]) * finalState[1]);
-
-
 	double probOsc = (id == 22) ? probPA : probAP;
 
-	// decide whether oscillation occurs
+	// decide whether oscillation occurs (only particle id changes)
 	Random& random = Random::instance();
 	if (random.rand() < probOsc) {
 		candidate->current.setId((id == 22) ? 51 : 22);
@@ -158,11 +155,12 @@ void ALPPhotonMixing::evolve(Candidate* candidate, MixingParameters& mixing, con
 	// return to original basis
 	finalState.operate(evolutionMatrix);
 
+	// assign weights to ALPs/photons (separately from the usual weights)
 	Eigen::Matrix3cd densityMatrix = finalState.getDensityMatrix();
 	candidate->setProperty(varProbabilityPhoton, Variant::fromDouble(std::abs(densityMatrix(0, 0)) + std::abs(densityMatrix(1, 1))));
 	candidate->setProperty(varProbabilityALP, Variant::fromDouble(std::abs(densityMatrix(2, 2))));
 
-
+	// store the new fields at the end of the step
 	candidate->setProperty(varFieldEM1, Variant::fromComplexDouble(finalState[1]));
 	candidate->setProperty(varFieldEM2, Variant::fromComplexDouble(finalState[0]));
 	candidate->setProperty(varFieldALP, Variant::fromComplexDouble(finalState[2]));	
@@ -244,7 +242,6 @@ Eigen::Matrix3cd MixingParameters::getExponentialDiagonalEigenvalueMatrix(const 
 Eigen::Matrix3cd MixingParameters::getSimilarityTransformingMatrix(const double& x) const {
 	return getEigenVectors().inverse() * getExponentialDiagonalEigenvalueMatrix(x) * getEigenVectors();
 }
-
 
 
 

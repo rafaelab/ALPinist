@@ -74,7 +74,6 @@ void SourceCircularPolarisation::prepareCandidate(Candidate& candidate) const {
 	double phi2 = phi1 + M_PI / 2.;
 
 	setPolarisedCandidate(candidate, theta, phi1, phi2);
-
 }
 
 void SourceCircularPolarisation::setCoherent(bool b) {
