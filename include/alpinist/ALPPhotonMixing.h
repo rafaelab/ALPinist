@@ -66,7 +66,7 @@ class ALPPhotonMixing : public Module {
 
 /**
  @class MixingParameters
- @brief POD struct holding information about the mixing.
+ @brief Class holding information about the mixing.
  */
 class MixingParameters {
 	public:
@@ -92,34 +92,8 @@ class MixingParameters {
 		Eigen::Matrix3cd getEigenVectors() const;
 		Eigen::Matrix3cd getExponentialDiagonalEigenvalueMatrix(const double& x) const;
 		Eigen::Matrix3cd getSimilarityTransformingMatrix(const double& x) const;
-		// Eigen::Matrix3cd getDensityMatrix(const double& x) const;
 };
 
-
-// class MixedState {
-// 	protected:
-// 		std::complex<double> fieldEM1;
-// 		std::complex<double> fieldEM2;
-// 		std::complex<double> fieldALP;
-// 	public:
-// 		MixedState();
-// 		MixedState(std::complex<double> em1, std::complex<double> em2, std::complex<double> alp);
-// 		void setFieldEM1(std::complex<double> em1);
-// 		void setFieldEM2(std::complex<double> em2);
-// 		void setFieldALP(std::complex<double> a);
-// 		std::complex<double> getFieldEM1() const;
-// 		std::complex<double> getFieldEM2() const;
-// 		std::complex<double> getFieldALP() const;
-// 		double getAngleToReference() const;
-// 		// void rotateBy(const double& angle);
-// 		void rotateBy(const std::complex<double>& angle);
-// 		void normalise();
-// 		MixedState computeEvolved(const double& distance, const MixingParameters& mixing) const;
-// 		// Vector3<std::complex<double>> getVectorRepresentation() const;
-// 		Eigen::Vector3cd getVectorRepresentation() const;
-// 		friend double computeOscillationProbabilityBetween(const MixedState& initial, const MixedState& final, const int& particle);
-// };
- 
 
 
 

@@ -13,10 +13,12 @@
 
 #include "alpinist/Constants.h"
 
-using namespace crpropa;
 
 
 namespace alpinist {
+
+using namespace crpropa;
+
 
 /**
  @class PlasmaDensity
@@ -65,16 +67,16 @@ class PlasmaDensityGrid : public PlasmaDensity {
 		double getDensity(const Vector3d& position, const double &z = 0.) const;
 };
 
-} // namespace alpinist
-
-
 
 /**
- Estimate the plasma frequency (in s^-1).
+ Estimate the plasma frequency (in [rad]s^-1).
  */
 inline double computePlasmaFrequency(double densityMedium) {
 	return sqrt(densityMedium * eplus * eplus / mass_electron / epsilon0);
 }
+
+
+} // namespace alpinist
 
 
 #endif // ALPINIST_PLASMADENSITY_H

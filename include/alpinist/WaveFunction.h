@@ -19,6 +19,7 @@
 
 namespace alpinist {
 
+
 template<size_t N, typename T>
 inline Eigen::Matrix<T, N, N> getCanonicalBases() {
 	return Eigen::Matrix<T, N, N>::Identity();
@@ -30,7 +31,7 @@ inline Eigen::Matrix<T, N, N> getCanonicalBases() {
  @brief Wave function describing a mixed state.
   It can be written as:
    |\Psi> = sum_k c_k |\psi_k>
-  Bases can be complex or not, according to the template. 
+  Bases can be complex or real, according to the template. 
   Coefficients are always complex.
  @todo - Optimise return types to avoid needless treatment as complex.
  */
@@ -157,9 +158,6 @@ class WaveFunction {
 
 		Eigen::Matrix<T, N, N> getDensityMatrix() const {
 			return outerProduct(*this);
-			// Eigen::Matrix<T, N, N> density = coefficients.transpose() * coefficients.conjugate();
-			// density /= density.trace();
-			// return density;
 		}
 
 		WaveFunction<N, T> selectComponent(const size_t& index) const {
@@ -223,28 +221,8 @@ class WaveFunction {
 		}
 };
 
-// template <size_t N, class T>
-// T innerProduct(const WaveFunction<N, T>& psi1, const WaveFunction<N, T>& psi2) {
-// 	return psi1.innerProduct(psi2);
-// }
 
-// template <size_t N, class T>
-// T innerProduct(const WaveFunction<N, T>& psi1, const WaveFunction<N, T>& psi2, const Eigen::Matrix<T, N, N>& M) {
-// 	return psi1.innerProduct(M * psi2);
-// }
-
-
-// template <size_t N, class T>
-// bool haveSameBases(const WaveFunction<N, T>& psi1, const WaveFunction<N, T>& psi2) {
-// 	return psi1.haveSameBases(psi2);
-// }
-
-
-
-
-
-/** Convenient aliases
- */
+// Convenient aliases
 typedef WaveFunction<3, std::complex<double>> WaveFunction3c;
 typedef WaveFunction<2, std::complex<double>> WaveFunction2c;
 typedef WaveFunction<1, std::complex<double>> WaveFunction1c;
