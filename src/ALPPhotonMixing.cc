@@ -4,13 +4,14 @@
 namespace alpinist {
 
 
-ALPPhotonMixing::ALPPhotonMixing(double mass, double coupling, ref_ptr<MagneticField> field, ref_ptr<PlasmaDensity> density, double limit) : Module() {
+ALPPhotonMixing::ALPPhotonMixing(double mass, double coupling, ref_ptr<MagneticField> field, ref_ptr<PlasmaDensity> density, double limit, double toleranceField) : Module() {
 	setAxionMass(mass);
 	setCouplingConstant(coupling);
 	setMagneticField(field);
 	setPlasmaDensity(density);
 	setInteractionTag("ALPPh");
 	setLimit(limit);
+	setToleranceField(toleranceField);
 	setDescription("ALPPhotonMixing::ALPPhotonMixing");	
 }
 
@@ -38,6 +39,10 @@ void ALPPhotonMixing::setLimit(double l) {
 	limit = l;
 }
 
+void ALPPhotonMixing::setToleranceField(double t) {
+	toleranceField = t;
+}
+
 double ALPPhotonMixing::getAxionMass() const {
 	return axionMass;
 }
@@ -62,6 +67,10 @@ double ALPPhotonMixing::getLimit() const {
 	return limit;
 }
 
+double ALPPhotonMixing::getToleranceField() const {
+	return toleranceField;
+}
+
 WaveFunction3c ALPPhotonMixing::getWaveFunction(const Candidate& candidate) const {
 	Eigen::RowVector3cd fields;
 	std::complex<double> em2 = (candidate.getProperty(varFieldEM2)).toComplexDouble();
@@ -72,6 +81,28 @@ WaveFunction3c ALPPhotonMixing::getWaveFunction(const Candidate& candidate) cons
 	psi.normalise();
 
 	return psi;
+}
+
+double ALPPhotonMixing::computeMagneticFieldToleranceScale(const Vector3d& position1, const Vector3d& position2, const double& step, const double& redshift) const {
+	double B1 = magneticField->getField(position1, redshift).getR();
+	double B2 = magneticField->getField(position2, redshift).getR();
+	double deltaB = abs(B2 - B1);
+
+	double stepB = step;
+	if (deltaB / B1 <= toleranceField) {
+		stepB = step;
+	} else {
+		Vector3d positionB = position2;
+		int k = 1; // likely number of steps
+		do {
+			positionB = position1 + (position2 - position1) / (k + 1);
+			deltaB = abs(magneticField->getField(position1, redshift).getR() - magneticField->getField(positionB, redshift).getR());
+			k++;
+		} while (deltaB / B1 > toleranceField);
+		stepB = (positionB - position1).getR();
+	}
+
+	return stepB;
 }
 
 void ALPPhotonMixing::process(Candidate* candidate) const {
@@ -87,7 +118,7 @@ void ALPPhotonMixing::process(Candidate* candidate) const {
 	double energy = candidate->current.getEnergy() * (1 + redshift);
 	Vector3d position2 = candidate->current.getPosition();
 	Vector3d position1 = candidate->previous.getPosition();
-	// Vector3d position0 = candidate->created.getPosition();
+	Vector3d direction = candidate->current.getDirection();
 	Vector3d position = (position1 + position2) / 2.;
 	double step = candidate->getCurrentStep();
 	double w0 = candidate->getWeight();
@@ -105,18 +136,37 @@ void ALPPhotonMixing::process(Candidate* candidate) const {
 	double oscillationLength = 2. / mixing.deltaOscillation;
 
 
-	// allow oscillation and adjust step lengths  accordingly
-	// this is important when the module is called with other interaction modules (e.g., pair production)
-	if (limit > 0.) {
-		if (step > oscillationLength * limit) {
-			evolve(candidate, mixing, initialState, step);	
-			candidate->limitNextStep(oscillationLength * limit);
+	double thisStep = step;
+	double characteristicLength = step;
+
+	// resolve magnetic field variation within step
+	if (toleranceField > 0) {
+		double stepB = computeMagneticFieldToleranceScale(position1, position2, step, redshift);
+		thisStep = std::min(thisStep, stepB);
+		characteristicLength = stepB;
+	} 
+
+	// resolve oscillation length
+	// this is useful for interactions, since it ensures particle type conversion
+	if (limit > 0) {
+		thisStep = std::min(thisStep, oscillationLength * limit);
+		characteristicLength = std::min(characteristicLength, oscillationLength * limit);
+	}
+
+	// perform the actual evolution
+	if (limit > 0. || toleranceField > 0.) {
+		if (thisStep > characteristicLength) {
+			evolve(candidate, mixing, initialState, thisStep);
+			candidate->current.setPosition(position1 + direction * thisStep);
+			candidate->limitNextStep(characteristicLength);
+			return;
 		} else {
-			evolve(candidate, mixing, initialState, step);	
+			evolve(candidate, mixing, initialState, thisStep);
 		}
 	} else {
 		evolve(candidate, mixing, initialState, step);
 	}
+
 }
 
 void ALPPhotonMixing::evolve(Candidate* candidate, MixingParameters& mixing, const WaveFunction3c& initialState, const double& distance) const {

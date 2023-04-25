@@ -41,24 +41,28 @@ class ALPPhotonMixing : public Module {
 		bool havePhotons; //!<  whether to add photons to the simulations 
 		bool haveALPs; //!<  whether to add ALPs to the simulations 
 		double limit; //!< adjust limit of step size in terms of oscillation length
+		double toleranceField; //!< adjust step size to resolve magnetic-field variations within step
 		ref_ptr<PlasmaDensity> plasmaDensity; //!<  density of the plasma in the medium (mostly electrons)
 		ref_ptr<MagneticField> magneticField; //!< CRPropa object of type MagneticField
 		std::string interactionTag; //!< tag indicating this interaction
 	public:
-		ALPPhotonMixing(double axionMass, double couplingConstant, ref_ptr<MagneticField> magneticField, ref_ptr<PlasmaDensity> density, double limit = 0.);
+		ALPPhotonMixing(double axionMass, double couplingConstant, ref_ptr<MagneticField> magneticField, ref_ptr<PlasmaDensity> density, double limit = 0., double toleranceField = 0.);
 		void setAxionMass(double axionMass);
 		void setCouplingConstant(double couplingConstant);
 		void setMagneticField(ref_ptr<MagneticField> bField);
 		void setPlasmaDensity(ref_ptr<PlasmaDensity> density);
 		void setInteractionTag(std::string tag);
 		void setLimit(double tol);
+		void setToleranceField(double tol);
 		double getAxionMass() const;
 		double getCouplingConstant() const;
 		ref_ptr<PlasmaDensity> getPlasmaDensity() const;
 		ref_ptr<MagneticField> getMagneticField() const;
 		std::string getInteractionTag() const;
 		double getLimit() const;
+		double getToleranceField() const;
 		WaveFunction3c getWaveFunction(const Candidate& candidate) const;
+		double computeMagneticFieldToleranceScale(const Vector3d& position1, const Vector3d& position2, const double& step, const double& redshift) const;
 		void process(Candidate *candidate) const;
 		void evolve(Candidate* candidate, MixingParameters& mixing, const WaveFunction3c& initialState, const double& distance) const;
 };
