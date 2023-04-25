@@ -82,6 +82,7 @@ class MixingParameters {
 		double deltaOscillation;
 		double mixingAngle;
 		double angleB;
+		double criticalEnergy;
 		double energy;
 		Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> eigenSolver;
 

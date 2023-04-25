@@ -123,8 +123,8 @@ void ALPPhotonMixing::process(Candidate* candidate) const {
 	double step = candidate->getCurrentStep();
 	double w0 = candidate->getWeight();
 
-	// get fields at the beginning of the step
-	WaveFunction3c initialState = getWaveFunction(*candidate);
+	// // get fields at the beginning of the step
+	// WaveFunction3c initialState = getWaveFunction(*candidate);
 
 	// local magnetic field and plasma density
 	// note that propagation is along the x-direction, so transverse field is along y and z
@@ -156,15 +156,17 @@ void ALPPhotonMixing::process(Candidate* candidate) const {
 	// perform the actual evolution
 	if (limit > 0. || toleranceField > 0.) {
 		if (thisStep > characteristicLength) {
-			evolve(candidate, mixing, initialState, thisStep);
-			candidate->current.setPosition(position1 + direction * thisStep);
-			candidate->limitNextStep(characteristicLength);
+			do {
+				evolve(candidate, mixing, getWaveFunction(*candidate), thisStep);
+				step -= thisStep;
+			} while (step > 0);
+				candidate->limitNextStep(characteristicLength);
 			return;
 		} else {
-			evolve(candidate, mixing, initialState, thisStep);
+			evolve(candidate, mixing, getWaveFunction(*candidate), step);
 		}
 	} else {
-		evolve(candidate, mixing, initialState, step);
+		evolve(candidate, mixing, getWaveFunction(*candidate), step);
 	}
 
 }
@@ -188,10 +190,19 @@ void ALPPhotonMixing::evolve(Candidate* candidate, MixingParameters& mixing, con
 	double probOsc = (id == 22) ? probPA : probAP;
 
 	// decide whether oscillation occurs (only particle id changes)
+	// allow energy-dependent sampling to value ALPs
 	Random& random = Random::instance();
 	if (random.rand() < probOsc) {
 		candidate->current.setId((id == 22) ? 51 : 22);
 	} 
+
+	// // apply sampling
+	// double f = energy / 
+	// if (random.rand() > pow(f, thinning)) {
+	// 	double w = 1. / pow(f, thinning);
+	// 	candidate->addSecondary(11, Ep / (1 + z), pos, w, interactionTag);
+	// }
+
 
 	// return to original basis
 	finalState.operate(evolutionMatrix);
@@ -229,6 +240,7 @@ void MixingParameters::computeParameters(const double& couplingConstant, const d
 	deltaOscillation = sqrt(pow_integer<2>(deltaAxion - deltaPerpendicular) + pow_integer<2>(2 * deltaMixing));
 	mixingAngle = 0.5 * asin(2. * deltaMixing / deltaOscillation);
 	angleB = acos(bField.getZ() / bField.getR()); 
+	criticalEnergy = energy * abs(deltaAxion - deltaPlasma) / 2. / deltaMixing;
 }
 
 void MixingParameters::printParameters() {
