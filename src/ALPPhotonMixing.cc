@@ -186,18 +186,11 @@ void ALPPhotonMixing::evolve(Candidate* candidate, MixingParameters& mixing, con
 	double probOsc = (id == 22) ? probPA : probAP;
 
 	// decide whether oscillation occurs (only particle id changes)
-	// allow energy-dependent sampling to value ALPs
+	// allow energy-dependent sampling to make it more difficult for ALPs to oscillate
 	Random& random = Random::instance();
 	if (random.rand() < probOsc) {
 		candidate->current.setId((id == 22) ? 51 : 22);
 	} 
-
-	// // apply sampling
-	// double f = energy / 
-	// if (random.rand() > pow(f, thinning)) {
-	// 	double w = 1. / pow(f, thinning);
-	// 	candidate->addSecondary(11, Ep / (1 + z), pos, w, interactionTag);
-	// }
 
 
 	// return to original basis
