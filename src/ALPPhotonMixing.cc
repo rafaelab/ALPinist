@@ -123,9 +123,6 @@ void ALPPhotonMixing::process(Candidate* candidate) const {
 	double step = candidate->getCurrentStep();
 	double w0 = candidate->getWeight();
 
-	// // get fields at the beginning of the step
-	// WaveFunction3c initialState = getWaveFunction(*candidate);
-
 	// local magnetic field and plasma density
 	// note that propagation is along the x-direction, so transverse field is along y and z
 	double density = plasmaDensity->getDensity(position, redshift);
@@ -134,7 +131,6 @@ void ALPPhotonMixing::process(Candidate* candidate) const {
 	// compute mixing matrix
 	MixingParameters mixing(couplingConstant, axionMass, energy, density, bField);
 	double oscillationLength = 2. / mixing.deltaOscillation;
-
 
 	double thisStep = step;
 	double characteristicLength = step;
