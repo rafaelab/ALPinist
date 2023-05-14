@@ -63,7 +63,7 @@ class ALPPhotonMixing : public Module {
 		double getToleranceField() const;
 		WaveFunction3c getWaveFunction(const Candidate& candidate) const;
 		double computeMagneticFieldToleranceScale(const Vector3d& position1, const Vector3d& position2, const double& step, const double& redshift) const;
-		void process(Candidate *candidate) const;
+		void process(Candidate* candidate) const;
 		void evolve(Candidate* candidate, MixingParameters& mixing, const WaveFunction3c& initialState, const double& distance) const;
 };
 
