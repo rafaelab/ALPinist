@@ -68,6 +68,7 @@ add_library(${PLUGINNAME} MODULE
   ${CMAKE_CURRENT_BINARY_DIR}/${PLUGINNAME}_wrap.cxx
   ${CMAKE_CURRENT_SOURCE_DIR}/src/PlasmaDensity.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/SourceFeatures.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/PolarisationCorrections.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ALPPhotonMixing.cc
   )
 
