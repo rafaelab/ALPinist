@@ -106,12 +106,14 @@ double ALPPhotonMixing::computeMagneticFieldToleranceScale(const Vector3d& posit
 }
 
 void ALPPhotonMixing::process(Candidate* candidate) const {
-	if (axionMass == 0. || couplingConstant == 0.)
+	if (axionMass == 0. || couplingConstant == 0.) {
 		return;
-
+	}
+	
 	int id = candidate->current.getId();
-	if (id != 22 && id != 51)
+	if (id != 22 && id != 51) {
 		return;
+	}
 
 	// retrieve candidate properties
 	double redshift = candidate->getRedshift();
@@ -156,7 +158,7 @@ void ALPPhotonMixing::process(Candidate* candidate) const {
 				evolve(candidate, mixing, getWaveFunction(*candidate), thisStep);
 				step -= thisStep;
 			} while (step > 0);
-				candidate->limitNextStep(characteristicLength);
+			candidate->limitNextStep(characteristicLength);
 			return;
 		} else {
 			evolve(candidate, mixing, getWaveFunction(*candidate), step);
@@ -186,7 +188,7 @@ void ALPPhotonMixing::evolve(Candidate* candidate, MixingParameters& mixing, con
 	double probOsc = (id == 22) ? probPA : probAP;
 
 	// decide whether oscillation occurs (only particle id changes)
-	// allow energy-dependent sampling to make it more difficult for ALPs to oscillate
+	// to do: allow energy-dependent sampling to make it more difficult for ALPs to oscillate???
 	Random& random = Random::instance();
 	if (random.rand() < probOsc) {
 		candidate->current.setId((id == 22) ? 51 : 22);
