@@ -58,18 +58,18 @@ class PlasmaDensityGrid : public PlasmaDensity {
 		double normalisation;
 	public:
 		PlasmaDensityGrid();
-		PlasmaDensityGrid(const ref_ptr<Grid1f> &grid, const double& norm = 1.);
+		PlasmaDensityGrid(const ref_ptr<Grid1f>& grid, const double& norm = 1.);
 		~PlasmaDensityGrid();
 		void setNormalisation(double n);
 		void setGrid(const ref_ptr<Grid1f>& grid);
 		ref_ptr<Grid1f> getGrid() const;
 		double getNormalisation() const;
-		double getDensity(const Vector3d& position, const double &z = 0.) const;
+		double getDensity(const Vector3d& position, const double& z = 0.) const;
 };
 
 
 /**
- Estimate the plasma frequency (in [rad]s^-1).
+ Estimate the plasma frequency (in [rad s^-1]).
  */
 inline double computePlasmaFrequency(double densityMedium) {
 	return sqrt(densityMedium * eplus * eplus / mass_electron / epsilon0);
