@@ -26,7 +26,7 @@
 namespace alpinist {
 
 
-// forward declarion for latter use
+// forward declarion for subsequent use
 class MixingParameters;
 
 
@@ -45,6 +45,7 @@ class ALPPhotonMixing : public Module {
 		ref_ptr<PlasmaDensity> plasmaDensity; //!<  density of the plasma in the medium (mostly electrons)
 		ref_ptr<MagneticField> magneticField; //!< CRPropa object of type MagneticField
 		std::string interactionTag; //!< tag indicating this interaction
+
 	public:
 		ALPPhotonMixing(double axionMass, double couplingConstant, ref_ptr<MagneticField> magneticField, ref_ptr<PlasmaDensity> density, double limit = 0., double toleranceField = 0.);
 		void setAxionMass(double axionMass);
