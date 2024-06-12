@@ -228,7 +228,7 @@ typedef WaveFunction<2, std::complex<double>> WaveFunction2c;
 typedef WaveFunction<1, std::complex<double>> WaveFunction1c;
 typedef WaveFunction<3, double> WaveFunction3d;
 typedef WaveFunction<2, double> WaveFunction2d;
-typedef WaveFunction<2, double> WaveFunction1d;
+typedef WaveFunction<1, double> WaveFunction1d;
 
 
 
