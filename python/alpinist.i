@@ -26,11 +26,13 @@
 %{
 	#include "CRPropa.h"
 	#include "alpinist/Constants.h"
+	#include "alpinist/Data.h"
 	#include "alpinist/CandidateProperties.h"
 	#include "alpinist/SourceFeatures.h"
 	#include "alpinist/PlasmaDensity.h"
 	#include "alpinist/WaveFunction.h"
 	#include "alpinist/PolarisationCorrections.h"
+	#include "alpinist/PairProduction.h"
 	#include "alpinist/ALPPhotonMixing.h"
 	
 	using namespace alpinist;
@@ -49,11 +51,13 @@
 
 /* Include plugin parts to generate wrappers for */
 %include "alpinist/Constants.h"
+%include "alpinist/Data.h"
 %include "alpinist/CandidateProperties.h"
 %include "alpinist/SourceFeatures.h"
 %include "alpinist/PlasmaDensity.h"
 %include "alpinist/WaveFunction.h"
 %include "alpinist/PolarisationCorrections.h"
+%include "alpinist/PairProduction.h"
 %include "alpinist/ALPPhotonMixing.h"
 
 

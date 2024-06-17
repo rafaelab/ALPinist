@@ -36,9 +36,11 @@ include_directories(include
 
 # source files for compilation
 set(SOURCE_FILES
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/Data.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/PlasmaDensity.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/SourceFeatures.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/PolarisationCorrections.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/PairProduction.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ALPPhotonMixing.cc
   )
 
@@ -131,8 +133,8 @@ add_definitions(-DALPinist_DATA_PATH="${CMAKE_INSTALL_PREFIX}/data")
 install(TARGETS alpinist DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN "*.h")
 install(DIRECTORY ${CMAKE_BINARY_DIR}/include/ DESTINATION include FILES_MATCHING PATTERN "*.h")
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data DESTINATION ${CMAKE_INSTALL_PREFIX}/.)
-# install(DIRECTORY ${CMAKE_BINARY_DIR}/data DESTINATION data PATTERN ".git" EXCLUDE)
+# file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data DESTINATION ${CMAKE_INSTALL_PREFIX}/.)
+install(DIRECTORY ${CMAKE_BINARY_DIR}/data/ DESTINATION share/alpinist PATTERN ".git" EXCLUDE)
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/python/alpinist.i DESTINATION swig_interface)
 
-
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data DESTINATION ${CMAKE_INSTALL_PREFIX}/.)
