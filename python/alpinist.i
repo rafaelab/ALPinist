@@ -33,6 +33,7 @@
 	#include "alpinist/WaveFunction.h"
 	#include "alpinist/PolarisationCorrections.h"
 	#include "alpinist/PairProduction.h"
+	#include "alpinist/InverseComptonScattering.h"
 	#include "alpinist/ALPPhotonMixing.h"
 	
 	using namespace alpinist;
@@ -58,6 +59,7 @@
 %include "alpinist/WaveFunction.h"
 %include "alpinist/PolarisationCorrections.h"
 %include "alpinist/PairProduction.h"
+%include "alpinist/InverseComptonScattering.h"
 %include "alpinist/ALPPhotonMixing.h"
 
 

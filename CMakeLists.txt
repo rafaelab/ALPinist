@@ -41,6 +41,7 @@ set(SOURCE_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/src/SourceFeatures.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/PolarisationCorrections.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/PairProduction.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/InverseComptonScattering.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ALPPhotonMixing.cc
   )
 
