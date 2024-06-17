@@ -18,6 +18,8 @@ static const double B_schwinger = pow_integer<2>(mass_electron * c_light) / eplu
 static const double E_schwinger = B_schwinger * c_light;
 
 
+static const double mec2 = mass_electron * c_squared;
+
 } // namespace
 
 
